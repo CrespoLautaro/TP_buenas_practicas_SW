@@ -2,10 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_LIBROS 10
-#define MAX_TITULO 100
-#define MAX_AUTOR 50
-#define NOMBRE_ARCHIVO "biblioteca.txt"
+//DEFINICIONES
+#define MAX_LIBROS 10//Maxima capacidad de la coleccion de libros.
+#define MAX_TITULO 100//Maxima longitud de la cadena de caracteres para el titulo.
+#define MAX_AUTOR 50//Maxima longitud de la cadena de caracteres para el autor.
+#define NOMBRE_ARCHIVO "biblioteca.txt" // Nombre del archivo.
 
 struct Libro 
 {
@@ -14,6 +15,7 @@ struct Libro
 	int anioDePublicacion;
 };
 
+//FUNCIONES
 void agregarLibro(struct Libro libros[], int *ptrCantidadLibros);
 void mostrarLibros(struct Libro libros[], int cantidadLibros);
 void buscarLibro(struct Libro libros[], int cantidadLibros);
@@ -22,12 +24,13 @@ void cargarLibros(struct Libro libros[], int *ptrCantidadLibros);
 
 int main()
 {
-	struct Libro coleccionLibros[MAX_LIBROS];
-	int cantidadLibros = 0;
-	int opcionMenu;
+	struct Libro coleccionLibros[MAX_LIBROS]; //estructura para almacenar la coleccion.
+	int cantidadLibros = 0;                   //contador actual de libros en la coleccion.
+	int opcionMenu;                           //variable para almacenar la opcion seleccionada por el usuario.
 	
 	do 
 	{
+		//Menu
 		printf("\n========================================\n");
 		printf("      SISTEMA DE GESTION DE LIBROS      \n");
 		printf("========================================\n");
@@ -39,7 +42,13 @@ int main()
 		printf("0. Salir del sistema\n");
 		printf("========================================\n");
 		printf("Ingrese una opcion: ");
-		scanf("%d", &opcionMenu);
+		
+		//Lectura de la opcion del menu
+		if (scanf("%d", &opcionMenu) != 1) 
+		{
+			opcionMenu = -1; 
+			while (getchar() != '\n');
+		}
 		
 		switch(opcionMenu) 
 		{
@@ -81,7 +90,7 @@ void agregarLibro(struct Libro libros[], int *ptrCantidadLibros)
 	printf("\n--- NUEVO LIBRO ---\n");
 	
 	printf("Ingrese el titulo del libro: ");
-	scanf("%s", libros[*ptrCantidadLibros].titulo);
+	scanf("%s", libros[*ptrCantidadLibros].titulo); 
 	
 	printf("Ingrese el autor del libro: ");
 	scanf("%s", libros[*ptrCantidadLibros].autor);
@@ -95,6 +104,7 @@ void agregarLibro(struct Libro libros[], int *ptrCantidadLibros)
 
 void mostrarLibros(struct Libro libros[], int cantidadLibros) 
 {
+	//Verificacion si hay libros
 	if (cantidadLibros == 0) 
 	{
 		printf("\nNo hay libros registrados en el sistema.\n");
@@ -102,6 +112,7 @@ void mostrarLibros(struct Libro libros[], int cantidadLibros)
 	}	
 	
 	printf("\n--- LISTADO DE LIBROS ---\n");
+	//Cabecera de la tabla con formato alineado
 	printf("%-4s | %-30s | %-20s | %s\n", "ID", "TITULO", "AUTOR", "AÑO");
 	printf("------------------------------------------------------------------\n");
 	
@@ -126,8 +137,10 @@ void buscarLibro(struct Libro libros[], int cantidadLibros)
 	scanf("%s", autorBusqueda);
 	
 	printf("\nResultados de la busqueda:\n");
+	
 	for (int i = 0; i < cantidadLibros; i++) 
 	{
+		//Uso de strcmp para comparar si el autor coincide.
 		if (strcmp(libros[i].autor, autorBusqueda) == 0) 
 		{
 			printf("* Titulo: %-25s | Año: %d\n", libros[i].titulo, libros[i].anioDePublicacion);
@@ -143,7 +156,8 @@ void buscarLibro(struct Libro libros[], int cantidadLibros)
 
 void guardarLibros(struct Libro libros[], int cantidadLibros)
 {
-	FILE *archivo; // Cambio: 'fp' por 'archivo'
+	FILE *archivo; 
+	// Apertura del archivo en modo escritura (write)
 	archivo = fopen(NOMBRE_ARCHIVO, "w");
 	
 	if (archivo == NULL)
@@ -164,6 +178,7 @@ void guardarLibros(struct Libro libros[], int cantidadLibros)
 void cargarLibros(struct Libro libros[], int *ptrCantidadLibros)
 {
 	FILE *archivo;
+	// Apertura del archivo en modo lectura (read)
 	archivo = fopen(NOMBRE_ARCHIVO, "r");
 	
 	if (archivo == NULL)
