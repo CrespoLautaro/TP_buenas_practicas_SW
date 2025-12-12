@@ -13,12 +13,14 @@ void aniadirLibro (struct Libro libros[], int *cant);
 void mostrarLibros (struct Libro libros[], int cant);
 void buscarLibro(struct Libro libros[], int cant);
 void guardarLibros(struct Libro libros[], int cant);
+void cargarLibros(struct Libro libros[], int *cant);
 
 int main()
 {
 	struct Libro libros[10];
 	int cant = 0;
 	int opcion;
+
 	printf("Bienvenidos a la libreria\n");
 	do 
 	{
@@ -27,6 +29,7 @@ int main()
 		printf("2. Mostrar los libros disponibles.\n");
 		printf("3. Buscar libro por Autor.\n");
 		printf("4. Guardar los libros en un archivo.\n");
+		printf("5. Cargar libros desde archivo.\n"); 
 		printf("0. Salir\n");
 		printf("Ingrese su opcion: ");
 		scanf("%d", &opcion);
@@ -45,6 +48,9 @@ int main()
 		case 4:
 			guardarLibros(libros, cant);
 			break;
+		case 5:
+			cargarLibros(libros, &cant);
+			break;
 		case 0:
 			printf("Saliendo del programa...\n");
 			break;
@@ -60,7 +66,7 @@ void aniadirLibro(struct Libro libros[], int *cant)
 {
 	if (*cant >= 10) 
 	{
-		printf("No se pueden añadir mas libros.\n");
+		printf("No se pueden añadir mas libros. Memoria llena.\n");
 		return;
 	}
 	printf("\n--- Añadir nuevo libros ---\n");
@@ -123,16 +129,37 @@ void guardarLibros(struct Libro libros[], int cant)
 	
 	if (fp == NULL)
 	{
-		printf("Error: No se pudo crear o abrir el archivo.\n");
+		printf("Error: No se pudo crear el archivo.\n");
 		return;
 	}
 	
-	fprintf(fp, "Lista de Libros Guardados:\n");
 	for (int i = 0; i < cant; i++)
 	{
 		fprintf(fp, "%s %s %d\n", libros[i].titulo, libros[i].autor, libros[i].anioDePubli);
 	}
 	
 	fclose(fp);
-	printf("Archivo guardado exitosamente como 'biblioteca.txt'.\n");
+	printf("Archivo guardado exitosamente.\n");
+}
+
+void cargarLibros(struct Libro libros[], int *cant)
+{
+	FILE *fp;
+	fp = fopen("biblioteca.txt", "r");
+	
+	if (fp == NULL)
+	{
+		printf("Error: No se encontro el archivo 'biblioteca.txt' o no se pudo abrir.\n");
+		return;
+	}
+	
+	*cant = 0; 
+	
+	while (*cant < 10 && fscanf(fp, "%s %s %d", libros[*cant].titulo, libros[*cant].autor, &libros[*cant].anioDePubli) == 3)
+	{
+		(*cant)++;
+	}
+	
+	fclose(fp);
+	printf("Se han cargado %d libros desde el archivo.\n", *cant);
 }
