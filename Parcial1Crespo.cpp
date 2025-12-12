@@ -12,21 +12,21 @@ struct Libro
 void aniadirLibro (struct Libro libros[], int *cant);
 void mostrarLibros (struct Libro libros[], int cant);
 void buscarLibro(struct Libro libros[], int cant);
-//void guardarLibro(struct Libro libros[], int cant);
+void guardarLibros(struct Libro libros[], int cant);
 
 int main()
 {
 	struct Libro libros[10];
-	int cant=0;
+	int cant = 0;
 	int opcion;
 	printf("Bienvenidos a la libreria\n");
 	do 
 	{
 		printf("\nMenu:\n");
-		printf("1. Añadir nuevo libro.\n");
+		printf("1. AÃ±adir nuevo libro.\n");
 		printf("2. Mostrar los libros disponibles.\n");
 		printf("3. Buscar libro por Autor.\n");
-        printf("4. Guardar los libros en un archivo.\n");
+		printf("4. Guardar los libros en un archivo.\n");
 		printf("0. Salir\n");
 		printf("Ingrese su opcion: ");
 		scanf("%d", &opcion);
@@ -43,7 +43,7 @@ int main()
 			buscarLibro(libros, cant);
 			break;
 		case 4:
-			//guardarLibros(libros, cant);
+			guardarLibros(libros, cant);
 			break;
 		case 0:
 			printf("Saliendo del programa...\n");
@@ -60,19 +60,19 @@ void aniadirLibro(struct Libro libros[], int *cant)
 {
 	if (*cant >= 10) 
 	{
-		printf("No se pueden añadir mas libros.\n");
+		printf("No se pueden aÃ±adir mas libros.\n");
 		return;
 	}
-	printf("\n--- Añadir nuevo libros ---\n");
+	printf("\n--- AÃ±adir nuevo libros ---\n");
 	printf("Ingrese su titulo: ");
 	scanf("%s", libros[*cant].titulo);
 	printf("Ingrese su Autor: ");
 	scanf("%s", libros[*cant].autor);
-	printf("Ingrese su año de publicacion: ");
+	printf("Ingrese su aÃ±o de publicacion: ");
 	scanf("%d", &libros[*cant].anioDePubli);
 	
 	(*cant)++;
-	printf("Libro añadido con exito.\n");
+	printf("Libro aÃ±adido con exito.\n");
 }
 
 void mostrarLibros(struct Libro libros[], int cant) 
@@ -85,10 +85,10 @@ void mostrarLibros(struct Libro libros[], int cant)
 	printf("\n--- Lista de libros ---\n");
 	for (int i = 0; i < cant; i++) 
 	{
-		printf("\nLibro n° %d:\n", i + 1);
+		printf("\nLibro nÂ° %d:\n", i + 1);
 		printf("Titulo: %s\n", libros[i].titulo);
 		printf("Autor: %s\n", libros[i].autor);
-		printf("Año de Publicacion: %d\n", libros[i].anioDePubli);
+		printf("AÃ±o de Publicacion: %d\n", libros[i].anioDePubli);
 	}
 }
 
@@ -102,10 +102,10 @@ void buscarLibro(struct Libro libros[], int cant)
 	{
 		if (strcmp(libros[i].autor, buscarAutor) == 0) 
 		{
-			printf("\nLibro encontrado n°%d:\n", i+1);
+			printf("\nLibro encontrado nÂ°%d:\n", i+1);
 			printf("Titulo: %s\n", libros[i].titulo);
 			printf("Autor: %s\n", libros[i].autor);
-			printf("Año de publicacion: %d\n", libros[i].anioDePubli);
+			printf("AÃ±o de publicacion: %d\n", libros[i].anioDePubli);
 			encontrado = 1;
 		}
 	}
@@ -116,10 +116,23 @@ void buscarLibro(struct Libro libros[], int cant)
 	}
 }
 
-/*void guardarLibro(struct Libro libros[], int cant);
+void guardarLibros(struct Libro libros[], int cant)
 {
- FILE *fp;
- 
+	FILE *fp;
+	fp = fopen("biblioteca.txt", "w");
 	
+	if (fp == NULL)
+	{
+		printf("Error: No se pudo crear o abrir el archivo.\n");
+		return;
+	}
+	
+	fprintf(fp, "Lista de Libros Guardados:\n");
+	for (int i = 0; i < cant; i++)
+	{
+		fprintf(fp, "%s %s %d\n", libros[i].titulo, libros[i].autor, libros[i].anioDePubli);
+	}
+	
+	fclose(fp);
+	printf("Archivo guardado exitosamente como 'biblioteca.txt'.\n");
 }
-*/
