@@ -5,169 +5,184 @@
 #define MAX_LIBROS 10
 #define MAX_TITULO 100
 #define MAX_AUTOR 50
-#define NOMBRE_ARCHIVO "biblioteca.txt" 
+#define NOMBRE_ARCHIVO "biblioteca.txt"
 
 struct Libro 
 {
 	char titulo[MAX_TITULO];
 	char autor[MAX_AUTOR];
-	int anioDePubli;
+	int anioDePublicacion;
 };
 
-
-void aniadirLibro (struct Libro libros[], int *cant);
-void mostrarLibros (struct Libro libros[], int cant);
-void buscarLibro(struct Libro libros[], int cant);
-void guardarLibros(struct Libro libros[], int cant);
-void cargarLibros(struct Libro libros[], int *cant);
+void agregarLibro(struct Libro libros[], int *ptrCantidadLibros);
+void mostrarLibros(struct Libro libros[], int cantidadLibros);
+void buscarLibro(struct Libro libros[], int cantidadLibros);
+void guardarLibros(struct Libro libros[], int cantidadLibros);
+void cargarLibros(struct Libro libros[], int *ptrCantidadLibros);
 
 int main()
 {
-	struct Libro libros[MAX_LIBROS];
-	int cant = 0;
-	int opcion;
-
-	printf("Bienvenidos a la libreria\n");
+	struct Libro coleccionLibros[MAX_LIBROS];
+	int cantidadLibros = 0;
+	int opcionMenu;
+	
 	do 
 	{
-		printf("\nMenu:\n");
-		printf("1. Añadir nuevo libro.\n");
-		printf("2. Mostrar los libros disponibles.\n");
-		printf("3. Buscar libro por Autor.\n");
-		printf("4. Guardar los libros en un archivo.\n");
-		printf("5. Cargar libros desde archivo.\n");
-		printf("0. Salir\n");
-		printf("Ingrese su opcion: ");
-		scanf("%d", &opcion);
+		printf("\n========================================\n");
+		printf("      SISTEMA DE GESTION DE LIBROS      \n");
+		printf("========================================\n");
+		printf("1. Agregar nuevo libro\n");
+		printf("2. Mostrar todos los libros\n");
+		printf("3. Buscar libro por Autor\n");
+		printf("4. Guardar coleccion en archivo\n");
+		printf("5. Cargar coleccion desde archivo\n");
+		printf("0. Salir del sistema\n");
+		printf("========================================\n");
+		printf("Ingrese una opcion: ");
+		scanf("%d", &opcionMenu);
 		
-		switch(opcion) 
+		switch(opcionMenu) 
 		{
 		case 1:
-			aniadirLibro(libros, &cant);
+			agregarLibro(coleccionLibros, &cantidadLibros);
 			break;
 		case 2:
-			mostrarLibros(libros, cant);
+			mostrarLibros(coleccionLibros, cantidadLibros);
 			break;
 		case 3:
-			buscarLibro(libros, cant);
+			buscarLibro(coleccionLibros, cantidadLibros);
 			break;
 		case 4:
-			guardarLibros(libros, cant);
+			guardarLibros(coleccionLibros, cantidadLibros);
 			break;
 		case 5:
-			cargarLibros(libros, &cant);
+			cargarLibros(coleccionLibros, &cantidadLibros);
 			break;
 		case 0:
-			printf("Saliendo del programa...\n");
+			printf("\nFinalizando el programa...\n");
 			break;
 		default:
-			printf("Opcion invalida. Intente nuevamente.\n");
+			printf("\nError: Opcion invalida. Intente nuevamente.\n");
 		}
 	} 
-	while(opcion != 0);
+	while(opcionMenu != 0);
+	
 	return 0;
 }	
 
-void aniadirLibro(struct Libro libros[], int *cant) 
+void agregarLibro(struct Libro libros[], int *ptrCantidadLibros) 
 {
-	if (*cant >= MAX_LIBROS) 
+	if (*ptrCantidadLibros >= MAX_LIBROS) 
 	{
-		printf("No se pueden añadir mas libros. Memoria llena (Max: %d).\n", MAX_LIBROS);
+		printf("\nError: La biblioteca esta llena.\n", MAX_LIBROS);
 		return;
 	}
-	printf("\n--- Añadir nuevo libros ---\n");
-
-	printf("Ingrese su titulo: ");
-	scanf("%s", libros[*cant].titulo);
-	printf("Ingrese su Autor: ");
-	scanf("%s", libros[*cant].autor);
-	printf("Ingrese su año de publicacion: ");
-	scanf("%d", &libros[*cant].anioDePubli);
 	
-	(*cant)++;
-	printf("Libro añadido con exito.\n");
+	printf("\n--- NUEVO LIBRO ---\n");
+	
+	printf("Ingrese el titulo del libro: ");
+	scanf("%s", libros[*ptrCantidadLibros].titulo);
+	
+	printf("Ingrese el autor del libro: ");
+	scanf("%s", libros[*ptrCantidadLibros].autor);
+	
+	printf("Ingrese el año de publicacion: ");
+	scanf("%d", &libros[*ptrCantidadLibros].anioDePublicacion);
+	
+	(*ptrCantidadLibros)++;
+	printf("\n El libro se ha registrado exitosamente.\n");
 }
 
-void mostrarLibros(struct Libro libros[], int cant) 
+void mostrarLibros(struct Libro libros[], int cantidadLibros) 
 {
-	if (cant == 0) 
+	if (cantidadLibros == 0) 
 	{
-		printf("No hay libros cargados.\n");
+		printf("\nNo hay libros registrados en el sistema.\n");
 		return;
 	}	
-	printf("\n--- Lista de libros ---\n");
-	for (int i = 0; i < cant; i++) 
+	
+	printf("\n--- LISTADO DE LIBROS ---\n");
+	printf("%-4s | %-30s | %-20s | %s\n", "ID", "TITULO", "AUTOR", "AÑO");
+	printf("------------------------------------------------------------------\n");
+	
+	for (int i = 0; i < cantidadLibros; i++) 
 	{
-		printf("\nLibro n° %d:\n", i + 1);
-		printf("Titulo: %s\n", libros[i].titulo);
-		printf("Autor: %s\n", libros[i].autor);
-		printf("Año de Publicacion: %d\n", libros[i].anioDePubli);
+		printf("%-4d | %-30s | %-20s | %d\n", 
+			   i + 1, 
+			   libros[i].titulo, 
+			   libros[i].autor, 
+			   libros[i].anioDePublicacion);
 	}
+	printf("------------------------------------------------------------------\n");
 }
 
-void buscarLibro(struct Libro libros[], int cant) 
+void buscarLibro(struct Libro libros[], int cantidadLibros) 
 {
-	char buscarAutor[MAX_AUTOR];
-	int encontrado = 0;	
+	char autorBusqueda[MAX_AUTOR];
+	int seEncontro = 0;	
 	
-	printf("\nIngrese el autor a buscar: ");
-	scanf("%s", buscarAutor);
-	for (int i = 0; i < cant; i++) 
+	printf("\n--- BUSQUEDA POR AUTOR ---\n");
+	printf("Ingrese el nombre del autor: ");
+	scanf("%s", autorBusqueda);
+	
+	printf("\nResultados de la busqueda:\n");
+	for (int i = 0; i < cantidadLibros; i++) 
 	{
-		if (strcmp(libros[i].autor, buscarAutor) == 0) 
+		if (strcmp(libros[i].autor, autorBusqueda) == 0) 
 		{
-			printf("\nLibro encontrado n°%d:\n", i+1);
-			printf("Titulo: %s\n", libros[i].titulo);
-			printf("Autor: %s\n", libros[i].autor);
-			printf("Año de publicacion: %d\n", libros[i].anioDePubli);
-			encontrado = 1;
+			printf("* Titulo: %-25s | Año: %d\n", libros[i].titulo, libros[i].anioDePublicacion);
+			seEncontro = 1;
 		}
 	}
 	
-	if (!encontrado) 
+	if (!seEncontro) 
 	{
-		printf("Libro no encontrado.\n");
+		printf("No se encontraron libros de ese autor.\n");
 	}
 }
 
-void guardarLibros(struct Libro libros[], int cant)
+void guardarLibros(struct Libro libros[], int cantidadLibros)
 {
-	FILE *fp;
-	fp = fopen(NOMBRE_ARCHIVO, "w");
+	FILE *archivo; // Cambio: 'fp' por 'archivo'
+	archivo = fopen(NOMBRE_ARCHIVO, "w");
 	
-	if (fp == NULL)
+	if (archivo == NULL)
 	{
-		printf("Error: No se pudo crear el archivo.\n");
+		printf("\nError: No se pudo crear o escribir en el archivo.\n");
 		return;
 	}
 	
-	for (int i = 0; i < cant; i++)
+	for (int i = 0; i < cantidadLibros; i++)
 	{
-		fprintf(fp, "%s %s %d\n", libros[i].titulo, libros[i].autor, libros[i].anioDePubli);
+		fprintf(archivo, "%s %s %d\n", libros[i].titulo, libros[i].autor, libros[i].anioDePublicacion);
 	}
 	
-	fclose(fp);
-	printf("Archivo guardado exitosamente en '%s'.\n", NOMBRE_ARCHIVO);
+	fclose(archivo);
+	printf("\nBase de datos guardada correctamente en '%s'.\n", NOMBRE_ARCHIVO);
 }
 
-void cargarLibros(struct Libro libros[], int *cant)
+void cargarLibros(struct Libro libros[], int *ptrCantidadLibros)
 {
-	FILE *fp;
-	fp = fopen(NOMBRE_ARCHIVO, "r");
+	FILE *archivo;
+	archivo = fopen(NOMBRE_ARCHIVO, "r");
 	
-	if (fp == NULL)
+	if (archivo == NULL)
 	{
-		printf("Error: No se encontro el archivo '%s'.\n", NOMBRE_ARCHIVO);
+		printf("\nAviso: No existe base de datos previa o hubo error al abrir '%s'.\n", NOMBRE_ARCHIVO);
 		return;
 	}
 	
-	*cant = 0; 
+	*ptrCantidadLibros = 0; 
 	
-	while (*cant < MAX_LIBROS && fscanf(fp, "%s %s %d", libros[*cant].titulo, libros[*cant].autor, &libros[*cant].anioDePubli) == 3)
+	while (*ptrCantidadLibros < MAX_LIBROS && 
+		   fscanf(archivo, "%s %s %d", 
+				  libros[*ptrCantidadLibros].titulo, 
+				  libros[*ptrCantidadLibros].autor, 
+				  &libros[*ptrCantidadLibros].anioDePublicacion) == 3)
 	{
-		(*cant)++;
+		(*ptrCantidadLibros)++;
 	}
 	
-	fclose(fp);
-	printf("Se han cargado %d libros desde el archivo.\n", *cant);
+	fclose(archivo);
+	printf("\nSe han recuperado %d libros del archivo.\n", *ptrCantidadLibros);
 }
